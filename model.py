@@ -481,6 +481,7 @@ class Generator(nn.Module):
         input_is_latent=False,
         noise=None,
         randomize_noise=True,
+        mean_path_length=1,
     ):
         if not input_is_latent:
             styles = [self.style(s) for s in styles]
@@ -539,7 +540,21 @@ class Generator(nn.Module):
         image = skip
 
         if return_latents:
-            return image, latent
+            
+            noise = torch.randn_like(image) / math.sqrt(
+                image.shape[2] * image.shape[3]
+            )
+            grad, = autograd.grad(
+                outputs=(image * noise).sum(), inputs=latents, create_graph=True
+            )
+            path_lengths = torch.sqrt(grad.pow(2).sum(2).mean(1))
+
+            path_mean = mean_path_length + decay * (path_lengths.mean() - mean_path_length)
+
+            path_penalty = (path_lengths - path_mean).pow(2).mean()
+
+            return path_penalty, path_mean.detach(), path_lengths
+            # return image, latent
 
         else:
             return image, None
