@@ -19,7 +19,7 @@ except ImportError:
     wandb = None
 
 from model import Generator, Discriminator
-from dataset import MultiResolutionDataset
+from folder_dataset import MultiResolutionDataset
 from distributed import (
     get_rank,
     synchronize,
@@ -422,6 +422,9 @@ if __name__ == "__main__":
         g_optim.load_state_dict(ckpt["g_optim"])
         d_optim.load_state_dict(ckpt["d_optim"])
 
+    generator = nn.parallel.DataParallel(generator)
+    discriminator = nn.parallel.DataParallel(discriminator)
+
     if args.distributed:
         generator = nn.parallel.DistributedDataParallel(
             generator,
@@ -449,7 +452,8 @@ if __name__ == "__main__":
     loader = data.DataLoader(
         dataset,
         batch_size=args.batch,
-        sampler=data_sampler(dataset, shuffle=True, distributed=args.distributed),
+        # sampler=data_sampler(dataset, shuffle=True, distributed=args.distributed),
+        shuffle=True,
         drop_last=True,
     )
 
