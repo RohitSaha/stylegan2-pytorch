@@ -7,7 +7,7 @@ bkgd_optim () {
 }
 
 # create array of ids that are to be used
-filename="/home/ubuntu/vid2vid-research/meta_files/ffhq_hair_ids.txt"
+filename="/home/ubuntu/vid2vid-research/src/meta_files/ffhq_hair_ids.txt"
 array=()
 while read -r line; do
 	name="$line"
@@ -15,7 +15,7 @@ while read -r line; do
 done < "$filename"
 array_len=${#array[@]}
 
-for (( i=0 ; i<120; i=i+4))
+for (( i=0 ; i<1; i=i+4))
 	do
 
 		FILE1='/home/ubuntu/raw/train/'${array[$i]}
