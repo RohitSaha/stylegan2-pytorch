@@ -1,6 +1,3 @@
-n_images=$1
-w_init=$2
-
 bkgd_optim () {
 	export CUDA_VISIBLE_DEVICES=$1
 	python projector.py\
