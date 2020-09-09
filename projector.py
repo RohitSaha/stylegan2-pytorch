@@ -195,20 +195,35 @@ if __name__ == "__main__":
 
     img_ar = make_image(img_gen)
 
+    if not os.path.exists('save_images'):
+        os.makedirs('save_images')
+
     result_file = {}
     for i, input_name in enumerate(args.files):
         noise_single = []
         for noise in noises:
-            noise_single.append(noise[i : i + 1])
+            noise_single.append(noise[i : i + 1].detach().cpu().numpy())
 
         result_file[input_name] = {
             "img": img_gen[i],
             "latent": latent_in[i],
             "noise": noise_single,
         }
+        
+        img_number = os.path.splitext(os.path.basename(input_name))[0]
+        img_name = "project.png"
 
-        img_name = os.path.splitext(os.path.basename(input_name))[0] + "-project.png"
+        dest = 'save_images/' + img_number + '/'
+        os.makedirs(dest)
+
         pil_img = Image.fromarray(img_ar[i])
-        pil_img.save(img_name)
+        pil_img.save(dest + img_name)
 
-    torch.save(result_file, filename)
+        import pickle
+        with open(dest + 'w_latent.pkl', 'wb') as handle:
+            pickle.dump(latent_in[i].detach().cpu().numpy(), handle)
+        with open(dest + 'noises.pkl', 'wb') as handle:
+            pickle.dump(noise_single, handle)
+
+        
+    #torch.save(result_file, filename)
