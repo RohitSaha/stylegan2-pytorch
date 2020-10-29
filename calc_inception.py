@@ -81,8 +81,11 @@ def my_extract_features(inception, device):
 
     for batch_num, (idx, I, M, HM, H, FM, F, FG) in enumerate(dataset):
         FG = FG.to(device)
-        feature = inception(img)[0].view(FG.shape[0], -1)
+        feature = inception(FG)[0].view(FG.shape[0], -1)
         feature_list.append(feature.to("cpu"))
+
+        if len(feature_list) % 5000 == 0:
+            print(len(feature_list))
 
     features = torch.cat(feature_list, 0)
 
@@ -107,7 +110,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--n_sample",
         type=int,
-        default=50000,
+        default=70000,
         help="number of samples used for embedding calculation",
     )
     parser.add_argument(
@@ -143,5 +146,5 @@ if __name__ == "__main__":
 
     name = os.path.splitext(os.path.basename(args.path))[0]
 
-    with open(f"inception_{name}.pkl", "wb") as f:
+    with open(f"inception_FG_FFHQ.pkl", "wb") as f:
         pickle.dump({"mean": mean, "cov": cov, "size": args.size, "path": args.path}, f)

@@ -18,9 +18,9 @@ def load_train_dataloader():
     raw_dataset = FFHQ(BASE_DIR='/home/ubuntu')
     dataset = DataLoader(
         raw_dataset,
-        batch_size=70,
+        batch_size=100,
         shuffle=True,
-        num_workers=8,
+        num_workers=32,
         drop_last=False,
     )
 
