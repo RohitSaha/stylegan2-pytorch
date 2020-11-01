@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 
 
 def load_train_dataloader():
-    raw_dataset = FFHQ(BASE_DIR='/home/ubuntu')
+    raw_dataset = FFHQ(BASE_DIR='/home/ubuntu', li=True)
     dataset = DataLoader(
         raw_dataset,
         batch_size=100,
@@ -25,6 +25,10 @@ def load_train_dataloader():
     )
 
     return dataset
+
+def get_synth_files(BASE_DIR, li):
+    images_dir = os.path.join(BASE_DIR, "synth")
+    masks_dir = os.path.join(BASE_DIR, "masks", "train")
 
 
 def get_files(BASE_DIR):
@@ -111,10 +115,20 @@ def process_image(img_path, mask_path, size=None, normalize=None):
 
 
 class FFHQ(Dataset):
-    def __init__(self, BASE_DIR):
+    def __init__(self, BASE_DIR, li=False):
 
-        logging.info(f"Reading data from:{BASE_DIR}")
-        self.files = get_files(BASE_DIR)
+        if li:
+            ids = []
+            f = open('valSamples_5K.txt', 'r')
+            for line in f:
+                ids.append(line.split(' ')[0])
+            f.close()
+            self.files = []
+            for idx in ids:
+                self.files.append((os.path.join('raw/train', idx), os.path.join('masks/train', idx)))
+        else:
+            logging.info(f"Reading data from:{BASE_DIR}")
+            self.files = get_files(BASE_DIR)
         self.length = len(self.files)
         logging.info(f"Samples:{self.length}")
 
