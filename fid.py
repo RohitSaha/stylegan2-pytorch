@@ -59,7 +59,7 @@ def calc_fid(sample_mean, sample_cov, real_mean, real_cov, eps=1e-6):
 
 if __name__ == '__main__':
     device = 'cuda'
-
+    '''
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--truncation', type=float, default=1)
@@ -96,11 +96,16 @@ if __name__ == '__main__':
 
     sample_mean = np.mean(features, 0)
     sample_cov = np.cov(features, rowvar=False)
-
-    with open(args.inception, 'rb') as f:
+    '''
+    with open('inception_FG_val5KSamples.pkl', 'rb') as f:
         embeds = pickle.load(f)
         real_mean = embeds['mean']
         real_cov = embeds['cov']
+
+    with open('inception_FG_synth_val5KSamples.pkl', 'rb') as f:
+        embeds = pickle.load(f)
+        sample_mean = embeds['mean']
+        sample_cov = embeds['cov']
 
     fid = calc_fid(sample_mean, sample_cov, real_mean, real_cov)
 

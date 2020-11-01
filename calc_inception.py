@@ -146,5 +146,5 @@ if __name__ == "__main__":
 
     name = os.path.splitext(os.path.basename(args.path))[0]
 
-    with open(f"inception_FG_val5KSamples.pkl", "wb") as f:
+    with open(f"inception_FG_synth_val5KSamples.pkl", "wb") as f:
         pickle.dump({"mean": mean, "cov": cov, "size": args.size, "path": args.path}, f)
