@@ -97,12 +97,12 @@ if __name__ == '__main__':
     sample_mean = np.mean(features, 0)
     sample_cov = np.cov(features, rowvar=False)
     '''
-    with open('inception_FG_val5KSamples.pkl', 'rb') as f:
+    with open('inception_FG_FFHQ.pkl', 'rb') as f:
         embeds = pickle.load(f)
         real_mean = embeds['mean']
         real_cov = embeds['cov']
 
-    with open('inception_FG_synth_val5KSamples.pkl', 'rb') as f:
+    with open('inception_FG_val5KSamples.pkl', 'rb') as f:
         embeds = pickle.load(f)
         sample_mean = embeds['mean']
         sample_cov = embeds['cov']
